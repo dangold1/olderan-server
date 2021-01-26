@@ -6,7 +6,6 @@ const User = mongoose.model('users', new mongoose.Schema({
     password: String,
     role: String,
     created_time: { type : Date, default: Date.now },
-    status: Number,
 }));
 
 module.exports = User;
