@@ -6,8 +6,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const usersRoutes = require('./routes/users.routes');
+const authRoutes = require('./routes/auth.routes');
 const adminRoutes = require('./routes/admin.routes');
+const userAuthMiddleware = require('./middlewares/userAuth.middleware');
 
 //----------------------------------DB Connection-------------------------------------
 mongoose.connect(MONGODB_URI, {
@@ -15,7 +16,7 @@ mongoose.connect(MONGODB_URI, {
     useCreateIndex: true,
     useUnifiedTopology: true
 })
-    .then(() => { console.log("Connected to database!" ); })
+    .then(() => { console.log("Connected to database!"); })
     .catch((err) => { console.error(`Error connecting to the database. \n${err}`); })
 
 //----------------------------------Middlewares Router-------------------------------------
@@ -23,12 +24,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-
 // Users routes
-app.use('/api', usersRoutes);
+app.use('/api', authRoutes);
+
+// Auth Middleware
+app.use(userAuthMiddleware);
 
 // Admin routes
 app.use('/api/admin', adminRoutes);
+
 
 //----------------------------------Run Server---------------------------------------------
 
