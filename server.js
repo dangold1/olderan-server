@@ -24,10 +24,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-// Users routes
+// Enter app routes
 app.use('/api', authRoutes);
 
-// Auth Middleware
+// Auth middleware
 app.use(userAuthMiddleware);
 
 // Admin routes

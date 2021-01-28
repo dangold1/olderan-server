@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 const authService = require('../services/auth.service');
 
+/**
+ * 
+ * Token Authentication Middleware
+ * @param {String} req.headers['x-token']
+ */
 const userAuthMiddleware = async (req, res, next) => {
     try {
         let token = req.headers['x-token'];

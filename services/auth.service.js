@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
 
 /**
  * @param {Object} data { username }
@@ -19,6 +20,8 @@ const isUsernameExists = async data => {
  */
 const register = async userData => {
     try {
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+        userData.password = hashedPassword;
         let newUser = new User(userData);
         let result = await newUser.save();
         return result;
@@ -41,8 +44,13 @@ const getUserById = async userId => await User.findById(userId).lean();
 const signin = async data => {
     const { username, password } = data;
     try {
-        let result = await User.findOne({ username: username, password: password });
-        return result;
+        const user = await User.findOne({ username: username });
+        const success = await bcrypt.compare(password, user.password);
+        if (success) {
+            return user;
+        } else {
+            throw new Error("Wrong Password Or User Not Found");
+        }
     } catch (err) {
         console.log(err);
     }
